@@ -1,4 +1,4 @@
-[![Build status](https://github.com/Aertalon/yaa-ada/actions/workflows/build.yaml/badge.svg)](https://github.com/Aertalon/yaa-ada/actions/workflows/build.yaml)
+[![Build status](https://github.com/Aertalon/yaa-ada/actions/workflows/build.yml/badge.svg)](https://github.com/Aertalon/yaa-ada/actions/workflows/build.yml)
 [![Test status](https://github.com/Aertalon/yaa-ada/actions/workflows/test.yml/badge.svg)](https://github.com/Aertalon/yaa-ada/actions/workflows/test.yml)
 
 # yaa-ada

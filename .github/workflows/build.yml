@@ -16,11 +16,9 @@ jobs:
     runs-on: ${{ matrix.os }} # Run the continous integration workflow on each OS listed in the matrix.
 
     steps:
-        # Check-out repo, install+setup alire (specific version)
+        # Check-out repo, install+setup alire
       - uses: actions/checkout@v2
       - uses: alire-project/setup-alire@v1
-        with:
-          version: 1.2.0-rc1
 
         # Build the project using the validation build profile to enforce static analysis and coding style.
       - name: Build crate
