@@ -59,14 +59,6 @@ $ make coverage
 
 To be written.
 
-## License
-
-The Ada code and unit tests are licensed under the [Apache License 2.0][url-apache].
-The first line of each Ada file should contain an SPDX license identifier tag that
-refers to this license:
-
-    SPDX-License-Identifier: Apache-2.0
-
 ## Acknowledgements
 
 The structure of this repo is heavily influenced by Onox' [json-ada library][url-json-ada].
