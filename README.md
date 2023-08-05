@@ -1,10 +1,5 @@
-[![Build status](https://github.com/onox/json-ada/actions/workflows/build.yaml/badge.svg)](https://github.com/onox/json-ada/actions/workflows/build.yaml)
-[![Test status](https://github.com/onox/json-ada/actions/workflows/test.yml/badge.svg)](https://github.com/onox/json-ada/actions/workflows/test.yml)
-[![Alire json](https://img.shields.io/endpoint?url=https://alire.ada.dev/badges/json.json)](https://alire.ada.dev/crates/json.html)
-[![License](https://img.shields.io/github/license/onox/json-ada.svg?color=blue)](https://github.com/onox/json-ada/blob/master/LICENSE)
-[![GitHub release](https://img.shields.io/github/release/onox/json-ada.svg)](https://github.com/onox/json-ada/releases/latest)
-[![IRC](https://img.shields.io/badge/IRC-%23ada%20on%20libera.chat-orange.svg)](https://libera.chat)
-[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.svg)](https://gitter.im/ada-lang/Lobby)
+[![Build status](https://github.com/Aertalon/yaa-ada/actions/workflows/build.yaml/badge.svg)](https://github.com/Aertalon/yaa-ada/actions/workflows/build.yaml)
+[![Test status](https://github.com/Aertalon/yaa-ada/actions/workflows/test.yml/badge.svg)](https://github.com/Aertalon/yaa-ada/actions/workflows/test.yml)
 
 # yaa-ada
 
@@ -78,5 +73,5 @@ The structure of this repo is heavily influenced by Onox' [json-ada library][url
 
   [url-alire]: https://alire.ada.dev/
   [url-apache]: https://opensource.org/licenses/Apache-2.0
-  [url-json-ada]: https://github.com/onox/json-ada
+  [url-json-ada]: https://github.com/Aertalon/yaa-ada
 
