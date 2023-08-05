@@ -1,0 +1,19 @@
+name = "yaa_tests"
+description = "An Ada 2012 library for autodifferentiation based on dual numbers"
+version = "0.1.0-dev"
+
+authors = ["Enrico Lovisari"]
+maintainers = ["Enrico Lovisari <elovisari@gmail.com>"]
+maintainers-logins = ["Aertalon"]
+
+executables = ["test_bindings"]
+[[depends-on]]
+yaa = "~0.1.0-dev"
+aunit = "^23.0.0"
+gnatcov = "^22.0.1"
+
+[[pins]]
+yaa = { path='../yaa' }
+
+[build-profiles]
+yaa = "development"

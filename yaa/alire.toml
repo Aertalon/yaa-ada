@@ -1,0 +1,16 @@
+name = "yaa"
+description = "An Ada 2012 library for autodifferentiation based on dual numbers"
+version = "0.1.0-dev"
+website = ""
+licenses = "Apache-2.0"
+tags = ["yaa"]
+
+authors = ["Enrico Lovisari"]
+maintainers = ["Enrico Lovisari <elovisari@gmail.com>"]
+maintainers-logins = ["Aertalon"]
+
+[build-switches]
+validation.compile_checks = "warnings"
+"*".style_checks = ["-gnatygAO-Is"]
+[[depends-on]]
+gnatprove = "^12.1.1"

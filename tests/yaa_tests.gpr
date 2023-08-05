@@ -1,0 +1,22 @@
+with "config/yaa_tests_config.gpr";
+project Yaa_Tests is
+
+   for Source_Dirs use ("src/", "config/");
+   for Object_Dir use "build/obj/" & Yaa_Tests_Config.Build_Profile;
+   for Create_Missing_Dirs use "True";
+   for Exec_Dir use "build/bin";
+   for Main use ("test_bindings.adb");
+
+   package Compiler is
+      for Default_Switches ("Ada") use Yaa_Tests_Config.Ada_Compiler_Switches;
+   end Compiler;
+
+   package Binder is
+      for Switches ("Ada") use ("-Es"); --  Symbolic traceback
+   end Binder;
+
+   package Install is
+      for Artifacts (".") use ("share");
+   end Install;
+
+end Yaa_Tests;
