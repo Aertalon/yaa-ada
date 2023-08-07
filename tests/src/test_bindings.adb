@@ -18,8 +18,8 @@ with AUnit.Reporter.Text;
 with AUnit.Run;
 with AUnit.Test_Suites;
 
-with Test_Dummy;
 with Test_Duals;
+with Test_Yaa;
 
 procedure Test_Bindings is
    function Suite return AUnit.Test_Suites.Access_Test_Suite;
@@ -28,8 +28,8 @@ procedure Test_Bindings is
       Result : constant AUnit.Test_Suites.Access_Test_Suite :=
       AUnit.Test_Suites.New_Suite;
    begin
-      Result.Add_Test (Test_Dummy.Suite);
       Result.Add_Test (Test_Duals.Suite);
+      Result.Add_Test (Test_Yaa.Suite);
 
       return Result;
    end Suite;
