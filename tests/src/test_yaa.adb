@@ -30,23 +30,24 @@ package body Test_Yaa is
       use YAA_Functions_F;
 
       package Dual_Types_F is new Generic_Dual_Types (Real => Float);
-      use Dual_Types_F;
       package Functions_On_Float is new
          Ada.Numerics.Generic_Elementary_Functions (Float);
 
       generic
          type T is private;
          with function "*" (X : T; Y : T) return T;
+         with function CosT (X: T) return T;
       function F (X : T) return T;
 
       function F (X : T) return T is
       begin
-         return Cos (X * X);
+         return CosT (X * X);
       end F;
 
       function F_Dual is new F (
          T => Dual_Types_F.Dual,
-         "*" => Dual_Types_F."*");
+         "*" => Dual_Types_F."*",
+         CosT => YAA_Functions_F.Cos);
 
    begin
       Assert (
