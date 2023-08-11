@@ -1,10 +1,8 @@
 with Ada.Numerics.Generic_Elementary_Functions;
-with Generic_Dual_Types;
-
 generic
-type Real is digits <>;
 package YAA.Functions is
-   package Dual_Types is new Generic_Dual_Types (Real => Real);
+
+   package Dual_Types renames YAA.Dual_Types;
 
    package Functions_On_Real is new
       Ada.Numerics.Generic_Elementary_Functions (Real);

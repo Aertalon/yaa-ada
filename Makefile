@@ -2,6 +2,8 @@
 
 build:
 	cd yaa && alr build --validation
+	cd ..
+	cd tests && alr build
 
 clean:
 	cd yaa && alr clean

@@ -5,7 +5,6 @@ with AUnit.Test_Caller;
 
 with YAA;
 with YAA.Functions;
-with Generic_Dual_Types;
 
 package body Test_Yaa is
 
@@ -19,17 +18,15 @@ package body Test_Yaa is
       Name : constant String := "(Dual numbers test) ";
    begin
       Test_Suite.Add_Test (Caller.Create
-         (Name & "Sample", Test_Sample'Access));
+         (Name & "YAA: Example usage", Test_Sample'Access));
 
       return Test_Suite'Access;
    end Suite;
 
    procedure Test_Sample (Object : in out Test) is
       package YAA_F is new YAA (Real => Float);
-      package YAA_Functions_F is new YAA_F.Functions (Real => Float);
-      use YAA_Functions_F;
+      package YAA_Functions_F is new YAA_F.Functions;
 
-      package Dual_Types_F is new Generic_Dual_Types (Real => Float);
       package Functions_On_Float is new
          Ada.Numerics.Generic_Elementary_Functions (Float);
 
@@ -45,15 +42,15 @@ package body Test_Yaa is
       end F;
 
       function F_Dual is new F (
-         T => Dual_Types_F.Dual,
-         "*" => Dual_Types_F."*",
+         T => YAA_F.Dual_Types.Dual,
+         "*" => YAA_F.Dual_Types."*",
          CosT => YAA_Functions_F.Cos);
 
    begin
       Assert (
-         YAA_F.Derivative (F_Dual'Access, 4.0) =
+         YAA_F.Derivative (F_Dual'Access, 2.0) =
             -4.0 * Functions_On_Float.Sin (4.0),
-         "Sample test failed");
+         "YAA Example usage test failed");
    end Test_Sample;
 
 end Test_Yaa;

@@ -3,6 +3,7 @@ with Generic_Dual_Types;
 generic
 type Real is digits <>;
 package YAA is
+
    package Dual_Types is new Generic_Dual_Types (Real => Real);
    use Dual_Types;
 
