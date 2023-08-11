@@ -33,7 +33,7 @@ package body Test_Yaa is
       generic
          type T is private;
          with function "*" (X : T; Y : T) return T;
-         with function CosT (X: T) return T;
+         with function CosT (X : T) return T;
       function F (X : T) return T;
 
       function F (X : T) return T is
@@ -47,10 +47,24 @@ package body Test_Yaa is
          CosT => YAA_Functions_F.Cos);
 
    begin
-      Assert (
-         YAA_F.Derivative (F_Dual'Access, 2.0) =
-            -4.0 * Functions_On_Float.Sin (4.0),
-         "YAA Example usage test failed");
+      declare
+         X: constant Float := 3.0;
+      begin
+
+         --  f(x) = cos(x^2)
+         --  f'(x) = -2xsin(x^2)
+         --  f''(x) = -2sin(x^2) - 4x^2cos(x^2)
+         Assert (
+            YAA_F.Derivative (F_Dual'Access, X) =
+               -2.0 * X * Functions_On_Float.Sin (X * X),
+            "YAA Example usage test failed: derivative");
+
+         Assert (
+            YAA_F.Second_Derivative (F_Dual'Access, X) =
+               -2.0 * Functions_On_Float.Sin (X**2) - 4.0 * X**2 * Functions_On_Float.Cos (X**2),
+            "YAA Example usage test failed: second order derivative");
+      end;
+
    end Test_Sample;
 
 end Test_Yaa;
