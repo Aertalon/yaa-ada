@@ -8,7 +8,8 @@ package YAA.Functions is
    package Functions_On_Real is new
       Ada.Numerics.Generic_Elementary_Functions (Real);
 
-   function PowerR (X : Real; Q: Real) return Real renames Functions_On_Real."**";
+   function PowerR (X : Real; Q : Real) return Real
+      renames Functions_On_Real."**";
 
    function SqrtR (X : Real) return Real renames Functions_On_Real.Sqrt;
    function LogR (X : Real) return Real renames Functions_On_Real.Log;
@@ -21,8 +22,10 @@ package YAA.Functions is
 
    function ArccosR (X : Real) return Real renames Functions_On_Real.Arccos;
    function ArcsinR (X : Real) return Real renames Functions_On_Real.Arcsin;
-   function ArctanR (X : Real; Y : Real := Real(1.0)) return Real renames Functions_On_Real.Arctan;
-   function ArccotR (X : Real; Y : Real := Real(1.0)) return Real renames Functions_On_Real.Arccot;
+   function ArctanR (X : Real; Y : Real := Real (1.0)) return Real
+      renames Functions_On_Real.Arctan;
+   function ArccotR (X : Real; Y : Real := Real (1.0)) return Real
+      renames Functions_On_Real.Arccot;
 
    function CoshR (X : Real) return Real renames Functions_On_Real.Cosh;
    function SinhR (X : Real) return Real renames Functions_On_Real.Sinh;

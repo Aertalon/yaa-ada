@@ -9,7 +9,10 @@ private
 
    type Test is new AUnit.Test_Fixtures.Test_Fixture with null record;
 
-   --  Set and get tests
+   --  Sample usage
    procedure Test_Sample (Object : in out Test);
+
+   --  Gradient sample usage
+   procedure Test_Gradient (Object : in out Test);
 
 end Test_Yaa;
