@@ -10,6 +10,7 @@ package YAA is
 
    package Real_Arrays is new Ada.Numerics.Generic_Real_Arrays (Real);
    subtype Gradient_Type is Real_Arrays.Real_Vector;
+   subtype Hessian_Type is Real_Arrays.Real_Matrix;
 
    function Derivative (
       F : access function (X : Dual) return Dual;
@@ -28,5 +29,13 @@ package YAA is
       F : access function (Args : ArrayT) return Dual;
       V : RealArrayT)
    return Gradient_Type;
+
+   generic
+      type ArrayT is array (Positive range <>) of Dual;
+      type RealArrayT is array (Positive range <>) of Real;
+   function Hessian (
+      F : access function (Args : ArrayT) return Dual;
+      V : RealArrayT)
+   return Hessian_Type;
 
 end YAA;

@@ -1,4 +1,7 @@
 with Ada.Numerics.Generic_Elementary_Functions;
+with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Characters.Latin_1; use Ada.Characters.Latin_1;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 with AUnit.Assertions;
 with AUnit.Test_Caller;
@@ -20,7 +23,8 @@ package body Test_Yaa is
       Test_Suite.Add_Test (Caller.Create
          (Name & "YAA: Example usage", Test_Sample'Access));
       Test_Suite.Add_Test (Caller.Create
-         (Name & "YAA: Example usage for gradient", Test_Gradient'Access));
+         (Name & "YAA: Example usage for gradient and hessian",
+            Test_Gradient_Hessian'Access));
 
       return Test_Suite'Access;
    end Suite;
@@ -70,7 +74,7 @@ package body Test_Yaa is
 
    end Test_Sample;
 
-   procedure Test_Gradient (Object : in out Test) is
+   procedure Test_Gradient_Hessian (Object : in out Test) is
       package YAA_F is new YAA (Real => Float);
       package YAA_Functions_F is new YAA_F.Functions;
       use YAA_F.Real_Arrays;
@@ -115,15 +119,56 @@ package body Test_Yaa is
          ArrayT => FGenericDualArray,
          RealArrayT => FGenericRealArray);
 
+      function HessianF is new YAA_F.Hessian (
+         ArrayT => FGenericDualArray,
+         RealArrayT => FGenericRealArray);
+
+      function Image (V : YAA_F.Real_Arrays.Real_Vector) return String is
+         R : Unbounded_String := Null_Unbounded_String & "(";
+      begin
+         for I in V'Range loop
+            R := R & Float'Image (V (I)) & " ";
+         end loop;
+         R := R & ")";
+         return To_String (R);
+      end Image;
+
+      function Image (M : YAA_F.Real_Arrays.Real_Matrix) return String is
+         R : Unbounded_String := Null_Unbounded_String;
+      begin
+         for I in M'Range (1) loop
+            R := R & CR & LF & "(";
+            for J in M'Range (2) loop
+               R := R & Float'Image (M (I, J)) & " ";
+            end loop;
+            R := R & ")";
+         end loop;
+         return To_String (R);
+      end Image;
+
       function Distance (
          V1, V2 : YAA_F.Real_Arrays.Real_Vector) return Float is
          R : Float := 0.0;
          Diff : constant YAA_F.Real_Arrays.Real_Vector := V1 - V2;
       begin
          for I in Diff'Range loop
-            R := (Diff (I)) ** 2;
+            R := R + (Diff (I)) ** 2;
          end loop;
-         return R;
+         return Functions_On_Float.Sqrt (R);
+      end Distance;
+
+      function Distance (
+         V1, V2 : YAA_F.Real_Arrays.Real_Matrix) return Float is
+         R : Float := 0.0;
+         Diff : constant YAA_F.Real_Arrays.Real_Matrix := V1 - V2;
+      begin
+         --  Can be done in parallel
+         for I in Diff'Range (1) loop
+            for J in Diff'Range (2) loop
+               R := R + (Diff (I, J)) ** 2;
+            end loop;
+         end loop;
+         return Functions_On_Float.Sqrt (R);
       end Distance;
 
    begin
@@ -132,21 +177,77 @@ package body Test_Yaa is
          Y : constant Float := -1.0;
          Z : constant Float := 2.0;
          Args : constant FGenericRealArray := (X, Y, Z);
-         ExpectedGradient : constant YAA_F.Real_Arrays.Real_Vector (1 .. 3) :=
+
+         subtype HessianT is YAA_F.Real_Arrays.Real_Matrix (1 .. 3, 1 .. 3);
+         subtype GradientT is YAA_F.Real_Arrays.Real_Vector (1 .. 3);
+
+         ExpectedGradient : constant GradientT :=
             (
                Exp (Y * Sin (Z) + 2.0),
                X * Sin (Z) * Exp (Y * Sin (Z) + 2.0),
                X * Y * Cos (Z) * Exp (Y * Sin (Z) + 2.0)
             );
-         ActualGradient : constant YAA_F.Real_Arrays.Real_Vector (1 .. 3) :=
+         ComputedGradient : constant GradientT :=
             GradientF (F_Dual'Access, Args);
-      begin
 
-         Assert (
-            Distance(ActualGradient, ExpectedGradient) < 1.0e-10,
-            "YAA Example usage test failed: gradient");
+         ExpectedHessian : constant HessianT :=
+            (
+               (
+                  0.0,
+                  Sin (Z) * Exp (Y * Sin (Z) + 2.0),
+                  Y * Cos (Z) * Exp (Y * Sin (Z) + 2.0)
+               ),
+               (
+                  Sin (Z) * Exp (Y * Sin (Z) + 2.0),
+                  X * Sin (Z) ** 2 * Exp (Y * Sin (Z) + 2.0),
+                  X * Cos (Z) * Exp (Y * Sin (Z) + 2.0) * (1.0 + Sin (Z) * Y)
+               ),
+               (
+                  Y * Cos (Z) * Exp (Y * Sin (Z) + 2.0),
+                  X * Cos (Z) * Exp (Y * Sin (Z) + 2.0) * (1.0 + Sin (Z) * Y),
+                  X * Y * Exp (Y * Sin (Z) + 2.0) * (
+                     -Sin (Z) + Y * Cos (Z) **2)
+               )
+            );
+         ComputedHessian : constant HessianT :=
+            HessianF (F_Dual'Access, Args);
+      begin
+         declare
+            Difference : Float := 0.0;
+            MaxDifference : constant Float := 1.0e-6;
+            Success : Boolean := False;
+         begin
+            --  Gradient test
+            Difference := Distance (ComputedGradient, ExpectedGradient);
+            Success := Difference < MaxDifference;
+            if not Success then
+               Put_Line(
+                  "Expected gradient discrepancy (2-norm) less then "
+                  & Float'Image (MaxDifference)
+                  & " but found it to be "
+                  & Float'Image (Difference));
+               Put_Line("Expected gradient: " & Image(ExpectedGradient));
+               Put_Line("Computed gradient: " & Image(ComputedGradient));
+            end if;
+            Assert (Success, "YAA Example usage test failed: gradient");
+
+            --  Hessian test
+            Difference := Distance (ComputedHessian, ExpectedHessian);
+            Success := Difference < MaxDifference;
+            if not Success then
+               Put_Line(
+                  "Expected hessian discrepancy (frobenius norm) less then "
+                  & Float'Image (MaxDifference)
+                  & " but found it to be "
+                  & Float'Image (Difference));
+               Put_Line("Expected hessian: " & Image(ExpectedHessian));
+               Put_Line("Computed hessian: " & Image(ComputedHessian));
+            end if;
+            Assert (Success, "YAA Example usage test failed: hessian");
+         end;
+
       end;
 
-   end Test_Gradient;
+   end Test_Gradient_Hessian;
 
 end Test_Yaa;

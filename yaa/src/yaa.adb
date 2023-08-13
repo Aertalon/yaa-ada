@@ -35,4 +35,27 @@ package body YAA is
       return R;
    end Gradient;
 
+   function Hessian (
+      F : access function (Args : ArrayT) return Dual;
+      V : RealArrayT)
+   return Hessian_Type is
+      R : Hessian_Type (V'Range, V'Range);
+      VDual : ArrayT (V'Range);
+   begin
+      for RowIdx in V'Range loop
+         for ColIdx in V'Range loop
+            for J in V'Range loop
+               VDual (J) :=  (
+                  Re => V (J),
+                  Im1 => (if RowIdx = J then 1.0 else 0.0),
+                  Im2 => (if ColIdx = J then 1.0 else 0.0),
+                  Im12 => 0.0);
+            end loop;
+
+            R (RowIdx, ColIdx) := F (VDual).Im12;
+         end loop;
+      end loop;
+      return R;
+   end Hessian;
+
 end YAA;

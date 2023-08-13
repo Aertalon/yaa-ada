@@ -12,7 +12,7 @@ private
    --  Sample usage
    procedure Test_Sample (Object : in out Test);
 
-   --  Gradient sample usage
-   procedure Test_Gradient (Object : in out Test);
+   --  Gradient and Hessian sample usage
+   procedure Test_Gradient_Hessian (Object : in out Test);
 
 end Test_Yaa;
