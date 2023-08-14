@@ -26,6 +26,7 @@ coverage:
 	# Move *.srctrace to build/traces
 	cd tests && mkdir build/traces/ && mv *.srctrace build/traces/
 	# Run the GNATcov code coverage analysis on the trace files.
-	cd tests && alr gnatcov coverage --annotate=xcov --output-dir build/gnatcov_out --level=stmt --projects ../yaa.gpr build/traces/*.srctrace
+	cd tests && alr gnatcov coverage --annotate=html --output-dir build/gnatcov_out_html --level=stmt --projects ../yaa.gpr build/traces/*.srctrace
+	cd tests && alr gnatcov coverage --annotate=xcov --output-dir build/gnatcov_out_xcov --level=stmt --projects ../yaa.gpr build/traces/*.srctrace
 
 
