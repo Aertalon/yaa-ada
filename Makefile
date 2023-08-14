@@ -7,8 +7,7 @@ build:
 
 clean:
 	cd yaa && alr clean
-	cd tests && alr clean
-	rm -rf yaa/build tests/build tests/build/cov tests/TEST-*.xml
+	cd tests && alr clean && rm -rf build
 
 prove:
 	cd yaa && alr gnatprove -j0 --level=4
@@ -18,9 +17,15 @@ tests:
 	cd tests && alr run -s
 
 coverage:
-	mkdir -p tests/build/cov
-	lcov -q -c -d yaa/build/obj -d tests/build/obj -o tests/build/cov/unit.info
-	lcov -q -r tests/build/cov/unit.info */adainclude/* -o tests/build/cov/unit.info
-	lcov -q -r tests/build/cov/unit.info */tests/* -o tests/build/cov/unit.info
-	genhtml -q --ignore-errors source -o tests/build/cov/html tests/build/cov/unit.info
-	lcov -l tests/build/cov/unit.info
+	# Instrument the project code for coverage analysis.
+	cd tests && alr gnatcov instrument --level=stmt --dump-trigger=atexit --projects ../yaa.gpr
+	# Build testsuite with instrumented code.
+	cd tests && alr build -- --src-subdirs=gnatcov-instr --implicit-with=gnatcov_rts_full
+	# Run the instrumented testsuite. This will produce at least one `.srctrace` file for the coverage analysis.
+	cd tests && alr exec ./build/bin/test_bindings
+	# Move *.srctrace to build/traces
+	cd tests && mkdir build/traces/ && mv *.srctrace build/traces/
+	# Run the GNATcov code coverage analysis on the trace files.
+	cd tests && alr gnatcov coverage --annotate=xcov --output-dir build/gnatcov_out --level=stmt --projects ../yaa.gpr build/traces/*.srctrace
+
+
